@@ -136,4 +136,86 @@ print("Average degree in Google graph: {}".format(average_degree(adj_list_google
 # Try to implement the algorithm, and compute the number of (weakly) connected components and the
 # size of the largest (weakly) connected component of all three networks. Are the results expected?
 
+def components(adj_list):
+    """
+    Find connected components in graph represented by
+    specified adjacency list.
+
+    Args:
+        adj_dict (dict): The adjacency list representing the graph.
+
+    Returns:
+        (list): list containing lists representing the connected components.
+        Each nested list contains the indices of nodes in that connected component.
+    """
+    
+    # Empty list for storing the connected components
+    connected_components = []
+
+    # Initialize adjacency dictionary that maps node indices to their list of neighbours.
+    adj_dict = {idx+1:el for (idx, el) in enumerate(adj_list)}
+    
+    # Perform DFS to find connected components.
+    while len(adj_dict) > 0:
+        connected_components.append(component(adj_dict))
+
+    # Return connected components.
+    return connected_components
+
+
+def component(adj_dict):
+    """
+    Find next connected component in graph represented
+    by adjacency list.
+
+    Args:
+        adj_dict (dict): The adjacency list representing the graph.
+
+    Returns:
+        (list): the list containing the indices constituting the connected component.
+    """
+    
+    # Empty list for storing the next connected component
+    component = []
+
+    # Stack for implementind DFS
+    stack = []
+    stack.append(adj_dict.popitem())
+    
+    # Perform DFS.
+    while len(stack) > 0:
+        node_nxt = stack.pop()
+
+        # Append index of current node to component list.
+        component.append(node_nxt[0])
+
+        # Go over neighbors of current node.
+        for el in node_nxt[1]:
+
+            # If neighbor not yet visited, add to stack.
+            if el in adj_dict:
+                stack.append((el, adj_dict.pop(el)))
+
+    # Return found connected component.
+    return component
+
+
+# Find connected components.
+connected_components_toy = components(adj_list_toy)
+connected_components_karate = components(adj_list_karate)
+connected_components_collab = components(adj_list_collab)
+connected_components_google = components(adj_list_google)
+
+# Print number of connected components and the size of the largest
+# connected component for all the sample networks.
+
+print("Number of connected components in toy graph: {}".format(len(connected_components_toy)))
+print("Number of connected components in karate club graph : {}".format(len(connected_components_karate)))
+print("Number of connected components in imbd collaboration graph : {}".format(len(connected_components_collab)))
+print("Number of connected components in Google graph : {}".format(len(connected_components_google)))
+
+print("Size of largest connected component in toy graph: {}".format(max(map(lambda x: len(x), connected_components_toy))))
+print("Size of largest connected component in karate club graph : {}".format(max(map(lambda x: len(x), connected_components_karate))))
+print("Size of largest connected component in imbd collaboration graph : {}".format(max(map(lambda x: len(x), connected_components_collab))))
+print("Size of largest connected component in Google graph : {}".format(max(map(lambda x: len(x), connected_components_google))))
 
