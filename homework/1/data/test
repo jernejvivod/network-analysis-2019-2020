@@ -1,14 +1,3 @@
-# 'enron' directed network
-# 87,273 nodes & 1,148,072 edges (13,082 loops)
-# by LNA (Ljubljana Network Analysis)
-#
-# 1 "tralala""
-# 2 "hopsasa"
-# 3 "trup"
-# 4 "trata"
-# 5 "lala"
-# 6 "hopla"
-#
 1 2
 1 3
 2 4
