@@ -201,21 +201,21 @@ def component(adj_dict):
 
 
 # Find connected components.
-connected_components_toy = components(adj_list_toy)
-connected_components_karate = components(adj_list_karate)
-connected_components_collab = components(adj_list_collab)
+# connected_components_toy = components(adj_list_toy)
+# connected_components_karate = components(adj_list_karate)
+# connected_components_collab = components(adj_list_collab)
 connected_components_google = components(adj_list_google)
 
 # Print number of connected components and the size of the largest
 # connected component for all the sample networks.
-
-print("Number of connected components in toy graph: {}".format(len(connected_components_toy)))
-print("Number of connected components in karate club graph : {}".format(len(connected_components_karate)))
-print("Number of connected components in imbd collaboration graph : {}".format(len(connected_components_collab)))
-print("Number of connected components in Google graph : {}".format(len(connected_components_google)))
-
-print("Size of largest connected component in toy graph: {}".format(max(map(lambda x: len(x), connected_components_toy))))
-print("Size of largest connected component in karate club graph : {}".format(max(map(lambda x: len(x), connected_components_karate))))
-print("Size of largest connected component in imbd collaboration graph : {}".format(max(map(lambda x: len(x), connected_components_collab))))
+# 
+# print("Number of connected components in toy graph: {}".format(len(connected_components_toy)))
+# print("Number of connected components in karate club graph : {}".format(len(connected_components_karate)))
+# print("Number of connected components in imbd collaboration graph : {}".format(len(connected_components_collab)))
+# print("Number of connected components in Google graph : {}".format(len(connected_components_google)))
+# 
+# print("Size of largest connected component in toy graph: {}".format(max(map(lambda x: len(x), connected_components_toy))))
+# print("Size of largest connected component in karate club graph : {}".format(max(map(lambda x: len(x), connected_components_karate))))
+# print("Size of largest connected component in imbd collaboration graph : {}".format(max(map(lambda x: len(x), connected_components_collab))))
 print("Size of largest connected component in Google graph : {}".format(max(map(lambda x: len(x), connected_components_google))))
 
