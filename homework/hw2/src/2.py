@@ -10,7 +10,7 @@ def plot_degree_distributions(graph):
     Author: Jernej Vivod
 
     Args:
-        (graph): Networkx graph representation.
+        graph (obj): Networkx graph representation.
     """
     
     # Compute relative degree, in-degree and out-degree frequencies.
@@ -42,6 +42,7 @@ def plot_degree_distributions(graph):
 def power_law_exponent(degrees, min_degree):
     """
     Evaluate power-law exponent gamma using maximum-likelihood estimate.
+    Author: Jernej Vivod
 
     Args:
         degrees (list): List of node degrees
@@ -66,23 +67,37 @@ if __name__ == '__main__':
     graph_java = nx.read_edgelist(PATH1, create_using=nx.DiGraph)
     graph_lucene = nx.read_edgelist(PATH2, create_using=nx.DiGraph)
     
+    # Set plot titles and axis labels.
+    title1 = "Java Namespace of Java Language"
+    title2 = "Lucene Search Engine Library"
+    xlabel = "degree"
+    ylabel = "frequency"
+    
     # Plot exponent estimate or not.
-    PLOT_EXPONENT_ESTIMATE = False
+    PLOT_EXPONENT_ESTIMATE = True
     
     # Plot degree, in-degree and out-degree distributions.
     fig1, ax1 = plot_degree_distributions(graph_java)
     fig2, ax2 = plot_degree_distributions(graph_lucene)
     
+    # Set titles and axis labels.
+    ax1.set_title(title1)
+    ax2.set_title(title2)
+    ax1.set_xlabel(xlabel)
+    ax1.set_ylabel(ylabel)
+    ax2.set_xlabel(xlabel)
+    ax2.set_ylabel(ylabel)
+    
     # Compute power-law exponent using maximum-likelihood estimation.
-    gamma1 = power_law_exponent(dict(graph_java.in_degree()).values(), min_degree=2)
-    gamma2 = power_law_exponent(dict(graph_lucene.in_degree()).values(), min_degree=2)
+    gamma1 = power_law_exponent(dict(graph_java.in_degree()).values(), min_degree=3)
+    gamma2 = power_law_exponent(dict(graph_lucene.in_degree()).values(), min_degree=3)
      
     # If plotting exponent estimate on plot. 
     if PLOT_EXPONENT_ESTIMATE:
         dom1 = range(1, max(dict(graph_java.in_degree()).values())+1)
         dom2 = range(1, max(dict(graph_lucene.in_degree()).values())+1)
-        ax1.loglog(dom1, [el**(-gamma1) for el in dom1])
-        ax2.loglog(dom2, [el**(-gamma2) for el in dom2])
+        ax1.loglog(dom1, [el**(-gamma1) for el in dom1], '--')
+        ax2.loglog(dom2, [el**(-gamma2) for el in dom2], '--')
         ylim = (1.0e-4, 1)
         ax1.set_ylim(ylim[0], ylim[1])
         ax2.set_ylim(ylim[0], ylim[1])

@@ -38,7 +38,6 @@ def parse_network(path, *args, **kwargs):
 
             # If parsing.
             if parse:
-
                 if len(line.split(" ")) == 1:
                     # If found last delimiter, add data to graph and return.
                     nx.set_node_attributes(graph, names, 'name')
@@ -50,14 +49,9 @@ def parse_network(path, *args, **kwargs):
                     data[node_idx] = node_data
                     names[node_idx] = node_name
             else:
-                if len(line.split(" ")) >= 3 and line[2] == '1':
-                    # If at first line to be parsed, set parse flag.
+                if len(line.split(" ")) == 1:
+                    # If at first delimiter, set parse flag.
                     parse = True
-                    
-                    # Parse node index, name and associated data and add to dictionaries.
-                    node_idx, node_name, node_data = parse_line_data(line)
-                    data[node_idx] = node_data
-                    names[node_idx] = node_name
                 else:
                     pass
 
