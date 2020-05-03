@@ -29,7 +29,7 @@ def girvan_newman(num_groups, group_sizes, expected_degree, mu):
     # Label groups of nodes and construct ground truth in required format.
     nx.set_node_attributes(graph, {idx : {'label' : idx//group_sizes} for idx in range(graph.number_of_nodes())})
     attrs = nx.get_node_attributes(graph, 'label')
-    ground_truth = [{node_idx for node_idx, label in attrs.items() if label == com_label} for com_label in set(attrs.values())]
+    ground_truth = [{node_idx for node_idx, label in attrs.items() if label == comm_label} for comm_label in set(attrs.values())]
 
     # Add links.
     node_idxs = list(graph.nodes())
@@ -106,7 +106,7 @@ def lancichinetti(mu):
     # Load and parse graph. Get ground truth in required format.
     graph = parse_network.parse_network('../data/LFR/' + f, create_using=nx.Graph)
     attrs = nx.get_node_attributes(graph, 'data')
-    ground_truth = [{node_idx for node_idx, label in attrs.items() if label == com_label} for com_label in set(attrs.values())]
+    ground_truth = [{node_idx for node_idx, label in attrs.items() if label == comm_label} for comm_label in set(attrs.values())]
     
     # Return graph and ground truth in required format.
     return graph, ground_truth
@@ -139,7 +139,7 @@ def bottlenose_dolphins():
     # Load and parse graph. Get ground truth in required format.
     graph = parse_network.parse_network('../data/dolphins', create_using=nx.Graph)
     attrs = nx.get_node_attributes(graph, 'data')
-    ground_truth = [{node_idx for node_idx, label in attrs.items() if label == com_label} for com_label in set(attrs.values())]
+    ground_truth = [{node_idx for node_idx, label in attrs.items() if label == comm_label} for comm_label in set(attrs.values())]
     
     # Return graph and ground truth in required format.
     return graph, ground_truth
