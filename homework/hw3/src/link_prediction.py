@@ -19,7 +19,7 @@ def link_prediction_auc(network, prediction_func):
     Returns:
         (float): AUC score of method
     """
-
+    
     # Randomly sample m/10 pairs of nodes that are not yet
     # linked and store them into L_{N}.
     negative_examples = []
@@ -118,7 +118,7 @@ def get_benchmark_network(name):
 
     if name == 'erdos-renyi':
         # Erdos-Renyi random graph
-        NUM_NODES = 250
+        NUM_NODES = 25000
         AVERAGE_DEGREE = 10
         from benchmark_graphs import erdos_renyi
         network, _ = erdos_renyi(num_nodes=NUM_NODES, average_degree=AVERAGE_DEGREE)
@@ -159,7 +159,7 @@ def main():
         auc_pref_vals.append(link_prediction_auc(network, get_index_func('preferential-attachment', network)))
         auc_ad_vals.append(link_prediction_auc(network, get_index_func('adamic-adar', network)))
         auc_comm_vals.append(link_prediction_auc(network, get_index_func('community', network)))
-    with open('res_auc.txt', 'w') as f:
+    with open('../results/res_auc.txt', 'w') as f:
         f.write("|             | preferential attachment | adamic-Adar | community |\n")
         f.write("|-------------|-------------------------|-------------|-----------|\n")
         f.write("| Erdos-Renyi | {0:.4f}                  | {1:.4f}      | {2:.4f}    |\n".format(sum(auc_pref_vals)/len(auc_pref_vals), 
@@ -168,42 +168,39 @@ def main():
     auc_pref_vals = []
     auc_ad_vals = []
     auc_comm_vals = []
-    # network = get_benchmark_network('gnutella')
-    network = get_benchmark_network('erdos-renyi')
+    network = get_benchmark_network('gnutella')
     for idx in range(NUM_RUNS):
         auc_pref_vals.append(link_prediction_auc(network, get_index_func('preferential-attachment', network)))
         auc_ad_vals.append(link_prediction_auc(network, get_index_func('adamic-adar', network)))
         auc_comm_vals.append(link_prediction_auc(network, get_index_func('community', network)))
 
-    with open('res_auc.txt', 'a') as f:
+    with open('../results/res_auc.txt', 'a') as f:
         f.write("| gnutella    | {0:.4f}                  | {1:.4f}      | {2:.4f}    |\n".format(sum(auc_pref_vals)/len(auc_pref_vals), 
             sum(auc_ad_vals)/len(auc_ad_vals), sum(auc_comm_vals)/len(auc_comm_vals)))
    
     auc_pref_vals = []
     auc_ad_vals = []
     auc_comm_vals = []
-    # network = get_benchmark_network('facebook')
-    network = get_benchmark_network('erdos-renyi')
+    network = get_benchmark_network('facebook')
     for idx in range(NUM_RUNS):
         auc_pref_vals.append(link_prediction_auc(network, get_index_func('preferential-attachment', network)))
         auc_ad_vals.append(link_prediction_auc(network, get_index_func('adamic-adar', network)))
         auc_comm_vals.append(link_prediction_auc(network, get_index_func('community', network)))
     
-    with open('res_auc.txt', 'a') as f:
+    with open('../results/res_auc.txt', 'a') as f:
         f.write("| facebook    | {0:.4f}                  | {1:.4f}      | {2:.4f}    |\n".format(sum(auc_pref_vals)/len(auc_pref_vals), 
             sum(auc_ad_vals)/len(auc_ad_vals), sum(auc_comm_vals)/len(auc_comm_vals)))
    
     auc_pref_vals = []
     auc_ad_vals = []
     auc_comm_vals = []
-    # network = get_benchmark_network('facebook')
-    network = get_benchmark_network('erdos-renyi')
+    network = get_benchmark_network('nec')
     for idx in range(NUM_RUNS):
         auc_pref_vals.append(link_prediction_auc(network, get_index_func('preferential-attachment', network)))
         auc_ad_vals.append(link_prediction_auc(network, get_index_func('adamic-adar', network)))
         auc_comm_vals.append(link_prediction_auc(network, get_index_func('community', network)))
 
-    with open('res_auc.txt', 'a') as f:
+    with open('../results/res_auc.txt', 'a') as f:
         f.write("| nec         | {0:.4f}                  | {1:.4f}      | {2:.4f}    |".format(sum(auc_pref_vals)/len(auc_pref_vals), 
             sum(auc_ad_vals)/len(auc_ad_vals), sum(auc_comm_vals)/len(auc_comm_vals)))
 

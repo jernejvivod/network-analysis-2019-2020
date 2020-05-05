@@ -41,7 +41,7 @@ def nvi(prediction, ground_truth):
     second_partition_c = [x[1] for x in sorted([(node, nid) for nid, cluster in enumerate(ground_truth) for node in cluster], key=lambda x: x[0])]
     
     # Compute normalized mutual information.
-    return drv.information_variation(first_partition_c, second_partition_c, base=math.e)/math.log2(len(first_partition_c))
+    return drv.information_variation(first_partition_c, second_partition_c, base=math.e)/math.log(len(first_partition_c))
 
 
 def normalize_community_format(res, method):

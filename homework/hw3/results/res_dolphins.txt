@@ -1,5 +1,5 @@
 | method            | NVI    |
 |-------------------|--------|
-| Label propagation | 0.2094 |
-| Louvaine method   | 0.1746 |
-| Infomap method    | 0.1448 |
+| Label propagation | 0.0000 |
+| Louvain method    | 0.0970 |
+| Infomap method    | 0.0000 |

@@ -17,11 +17,11 @@ def benchmark_gn():
         results for Infomap method.
     """
     
-    NUM_REP = 100  # number of algorithm repetitions (on newly constructed graph)
+    NUM_REP = 25  # number of algorithm repetitions (on newly constructed graph)
     GN_NUM_GROUPS = 3  # number of groups in benchmark graph
     GN_GROUP_SIZES = 24  # group sizes in benchmark graph
     GN_EXPECTED_DEGREE = 20  # expected degree in benchmark graph
-    gn_mu_vals = (0.1, 0.2, 0.3, 0.4, 0.5)  # list of mu values for benchmark graph
+    gn_mu_vals = (0.0, 0.1, 0.2, 0.3, 0.4, 0.5)  # list of mu values for benchmark graph
     
     # Initialize lists for storing results for different mu values.
     y_vals_label_prop = []
@@ -45,7 +45,7 @@ def benchmark_gn():
 
             # Get detections for algorithms.
             res_label_prop = benchmark_utils.normalize_community_format(nx.algorithms.community.label_propagation.label_propagation_communities(graph), 'label_propagation')
-            res_louvain = benchmark_utils.normalize_community_format(community.best_partition(graph), 'louvain')
+            res_louvain = benchmark_utils.normalize_community_format(community.best_partition(graph, randomize=True), 'louvain')
             res_infomap = benchmark_utils.normalize_community_format(algorithms.infomap(graph), 'infomap')
 
             # Compute NMI values.
@@ -97,7 +97,7 @@ def benchmark_lancichinetti():
             # Get detections for algorithms.
             res_label_prop = benchmark_utils.normalize_community_format(\
                     nx.algorithms.community.label_propagation.label_propagation_communities(graph), 'label_propagation')
-            res_louvain = benchmark_utils.normalize_community_format(community.best_partition(graph), 'louvain')
+            res_louvain = benchmark_utils.normalize_community_format(community.best_partition(graph, randomize=True), 'louvain')
             res_infomap = benchmark_utils.normalize_community_format(algorithms.infomap(graph), 'infomap')
 
             # Compute NMI values.
@@ -126,7 +126,7 @@ def benchmark_er():
 
     NUM_REP = 25  # number of algorithm repetitions (on newly constructed graph)
     NUM_NODES = 1000  # number of nodes in benchmark graph
-    er_average_degrees = (1, 16, 24, 32, 40)  # list of average degrees for benchmark graph
+    er_average_degrees = (8, 16, 24, 32, 40)  # list of average degrees for benchmark graph
 
     # Initialize lists for storing results for different mu values.
     y_vals_label_prop = []
@@ -151,7 +151,7 @@ def benchmark_er():
             # Get detections for algorithms.
             res_label_prop = benchmark_utils.normalize_community_format(\
                     nx.algorithms.community.label_propagation.label_propagation_communities(graph), 'label_propagation')
-            res_louvain = benchmark_utils.normalize_community_format(community.best_partition(graph), 'louvain')
+            res_louvain = benchmark_utils.normalize_community_format(community.best_partition(graph, randomize=True), 'louvain')
             res_infomap = benchmark_utils.normalize_community_format(algorithms.infomap(graph), 'infomap')
             
             # Compute NMI values.
@@ -182,9 +182,9 @@ def benchmark_dolphins():
     NUM_REP = 25  # number of algorithm repetitions
 
     # Initialize lists for storing results.
-    nvi_label_prop = []
-    nvi_louvain = []
-    nvi_infomap = []
+    det_label_prop = []
+    det_louvain = []
+    det_infomap = []
     
     # Repeat benchmark graph construction and community detection specified number of times.
     print("Performing benchmarks on Lusseau bottlenose dolphins network")
@@ -196,20 +196,31 @@ def benchmark_dolphins():
         # Get detections for algorithms.
         res_label_prop = benchmark_utils.normalize_community_format(\
                 nx.algorithms.community.label_propagation.label_propagation_communities(graph), 'label_propagation')
-        res_louvain = benchmark_utils.normalize_community_format(community.best_partition(graph), 'louvain')
+        res_louvain = benchmark_utils.normalize_community_format(community.best_partition(graph, randomize=True), 'louvain')
         res_infomap = benchmark_utils.normalize_community_format(algorithms.infomap(graph), 'infomap')
 
-        # Compute NMI values.
-        nvi_label_prop.append(benchmark_utils.nvi(res_label_prop, ground_truth))
-        nvi_louvain.append(benchmark_utils.nvi(res_louvain, ground_truth))
-        nvi_infomap.append(benchmark_utils.nvi(res_infomap, ground_truth))
+        # Add detections to results list.
+        det_label_prop.append(res_label_prop)
+        det_louvain.append(res_louvain)
+        det_infomap.append(res_infomap)
         
         print("Done {0}/{1}".format(idx+1, NUM_REP))
     
-    # Get mean NMI value and set as value for current mu value.
-    res_label_prop = sum(nvi_label_prop)/len(nvi_label_prop)
-    res_louvain = sum(nvi_louvain)/len(nvi_louvain)
-    res_infomap = sum(nvi_infomap)/len(nvi_infomap)
+    # Initialize lists for computing pairwise NVI for detections.
+    pairwise_nvi_label_prop = []
+    pairwise_nvi_louvain = []
+    pairwise_nvi_infomap = []
+    
+    # Compute NVI of detections (pairwise).
+    for idx in range(NUM_REP-1):
+        pairwise_nvi_label_prop.append(benchmark_utils.nvi(det_label_prop[idx], det_label_prop[idx+1]))
+        pairwise_nvi_louvain.append(benchmark_utils.nvi(det_louvain[idx], det_louvain[idx+1]))
+        pairwise_nvi_infomap.append(benchmark_utils.nvi(det_infomap[idx], det_infomap[idx+1]))
+    
+    # Get mean NVI values and set as results
+    res_label_prop = sum(pairwise_nvi_label_prop)/len(pairwise_nvi_label_prop)
+    res_louvain = sum(pairwise_nvi_louvain)/len(pairwise_nvi_louvain)
+    res_infomap = sum(pairwise_nvi_infomap)/len(pairwise_nvi_infomap)
     
     # Return data for plotting results.
     return res_label_prop, res_louvain, res_infomap
@@ -327,7 +338,7 @@ if __name__ == '__main__':
             f.write('| method            | NVI    |\n')
             f.write('|-------------------|--------|\n')
             f.write('| Label propagation | {0:.4f} |\n'.format(res['res_label_prop_dolph']))
-            f.write('| Louvaine method   | {0:.4f} |\n'.format(res['res_louvain_dolph']))
+            f.write('| Louvain method    | {0:.4f} |\n'.format(res['res_louvain_dolph']))
             f.write('| Infomap method    | {0:.4f} |\n'.format(res['res_infomap_dolph']))
 
         sys.exit(0)
