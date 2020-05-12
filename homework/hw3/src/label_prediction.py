@@ -234,9 +234,6 @@ def main():
     # Parse network.
     network = parse_network.parse_network('../data/aps_2008_2013', create_using=nx.Graph)
 
-    import pdb
-    pdb.set_trace()
-    
     le, _ = get_label_encoder_and_bow(network)
 
     # Get training and test data.
